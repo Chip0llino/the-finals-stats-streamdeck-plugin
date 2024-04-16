@@ -1,8 +1,6 @@
 /// <reference path="libs/js/action.js" />
 /// <reference path="libs/js/stream-deck.js" />
 
-const playerRank = new Action('com.chip0llino.finalsStats.rank');
-
 /**
  * The first event fired when Stream Deck starts
  */
@@ -22,7 +20,7 @@ playerRank.onWillAppear(({ context,  payload }) => {
 const MACTIONS = {};
 
 // Action Events
-const sampleClockAction = new Action('com.elgato.sample-clock.action');
+const playerRank = new Action('com.chip0llino.finalsStats.rank');
 
 sampleClockAction.onWillAppear(({context, payload}) => {
     // console.log('will appear', context, payload);
@@ -76,7 +74,6 @@ class SampleClockAction {
         this.context = context;
         this.payload = payload;
         this.interval = null;
-        this.isEncoder = payload?.controller === 'Encoder';
         this.settings = {
             ...{
                 hour12: false,
@@ -84,7 +81,6 @@ class SampleClockAction {
                 showTicks: true
             }, ...payload?.settings
         };
-        this.ticks = '';
         this.timeOptions = {
             short: {hour: '2-digit', minute: '2-digit'},
             long: {hour: '2-digit', minute: '2-digit', second: '2-digit'}
@@ -121,11 +117,6 @@ class SampleClockAction {
             this.settings.color = settings.color;
             dirty = true;
         }
-        if(settings.hasOwnProperty('showTicks')) {
-            this.settings.showTicks = settings.showTicks === true;
-            this.ticks = ''; // trigger re-rendering of ticks
-            dirty = true;
-        }
         if(dirty) this.update();
     }
 
@@ -143,14 +134,6 @@ class SampleClockAction {
         const o = this.updateClockSettings();
         const svg = this.makeSvg(o);
         const icon = `data:image/svg+xml;base64,${btoa(svg)}`;
-        if(this.isEncoder) {
-            const payload = {
-                'title': o.date,
-                'value': o.time,
-                icon
-            };
-            $SD.setFeedback(this.context, payload);
-        }
         $SD.setImage(this.context, icon);
     }
     updateClockSettings() {

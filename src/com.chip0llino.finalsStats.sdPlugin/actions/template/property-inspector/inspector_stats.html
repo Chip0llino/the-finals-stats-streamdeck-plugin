@@ -16,12 +16,58 @@
     <div class="sdpi-wrapper">
         <form id="property-inspector">
             <div class="sdpi-item">
-                <div data-localize class="sdpi-item-label" title="platform">Platform</div>
-                <input data-localize class="sdpi-item-value" id="platform" type="text" value="" placeholder="Platform (crossplay, steam, xbox, psn)" />
+                <div data-localize class="sdpi-item-label" title="EmbarkID">Embark ID</div>
+                <input data-localize class="sdpi-item-value" id="embarkId" type="text" value="" placeholder="Your Embark ID" />
             </div>
-            <div class="sdpi-item">
-                <div data-localize class="sdpi-item-label" title="Nickname">Nickname</div>
-                <input data-localize class="sdpi-item-value" id="nickname" type="text" value="" placeholder="Your nickname" />
+            <div type="radio" class="sdpi-item" id="platform_radio">
+                <div class="sdpi-item-label">Platform</div>
+                <div class="sdpi-item-value ">
+                    <span class="sdpi-item-child">
+                        <input id="crossplay" type="radio" value="crossplay" name="platform_radio" >
+                        <label for="crossplay" class="sdpi-item-label"><span></span>Crossplay</label>
+                    </span>
+                    <span class="sdpi-item-child">
+                        <input id="steam" type="radio" value="steam" name="platform_radio" checked>
+                        <label for="steam" class="sdpi-item-label"><span></span>Steam</label>
+                    </span>
+                    <span class="sdpi-item-child">
+                        <input id="xbox" type="radio" value="xbox" name="platform_radio">
+                        <label for="xbox" class="sdpi-item-label"><span></span>Xbox</label>
+                    </span>
+                    <span class="sdpi-item-child">
+                        <input id="psn" type="radio" value="psn" name="platform_radio">
+                        <label for="psn" class="sdpi-item-label"><span></span>PSN</label>
+                    </span>
+                </div>
+            </div>
+            <div type="radio" class="sdpi-item" id="season_radio">
+                <div class="sdpi-item-label">Season</div>
+                <div class="sdpi-item-value ">
+                    <span class="sdpi-item-child">
+                        <input id="live" type="radio" value="live" name="season_radio" checked>
+                        <label for="live" class="sdpi-item-label"><span></span>Live</label>
+                    </span>
+                    <span class="sdpi-item-child">
+                        <input id="cb1" type="radio" value="cb1" name="season_radio">
+                        <label for="cb1" class="sdpi-item-label"><span></span>Closed Beta 1</label>
+                    </span>
+                    <span class="sdpi-item-child">
+                        <input id="cb2" type="radio" value="cb2" name="season_radio">
+                        <label for="cb2" class="sdpi-item-label"><span></span>Closed Beta 2</label>
+                    </span>
+                    <span class="sdpi-item-child">
+                        <input id="ob" type="radio" value="ob" name="season_radio">
+                        <label for="ob" class="sdpi-item-label"><span></span>Open Beta</label>
+                    </span>
+                    <span class="sdpi-item-child">
+                        <input id="s1" type="radio" value="s1" name="season_radio">
+                        <label for="s1" class="sdpi-item-label"><span></span>Season 1</label>
+                    </span>
+                    <span class="sdpi-item-child">
+                        <input id="s2" type="radio" value="s2" name="season_radio">
+                        <label for="s2" class="sdpi-item-label"><span></span>Season 2</label>
+                    </span>
+                </div>
             </div>
         </form>
     </div>
@@ -39,7 +85,52 @@
     <script src="../../../libs/js/dynamic-styles.js"></script>
 
     <!-- Property Inspector Source -->
-    <script src="inspector.js"></script>
+    <script>
+        let MSETTINGS = {
+            embarkId: "",
+            platform: "steam",
+            leaderboardVersion: "live"
+        };        
+     
+        $PI.on('connected', (jsn) => {
+            MSETTINGS = jsn?.actionInfo?.payload?.settings || {};
+
+            const embarkIdEl = document.getElementById('embarkId');
+            if(embarkIdEl) {
+                embarkIdEl.value = MSETTINGS.embarkId;
+                embarkIdEl.onchange = () => {
+                    MSETTINGS.embarkId = embarkIdEl.value;
+                    $PI.setSettings(MSETTINGS);
+                };
+            }
+
+            const platformEl = document.getElementById('platform_radio');
+            if(platformEl) {
+                const sPlatform = document.getElementById(MSETTINGS.platform);
+                sPlatform.checked = true;
+
+                platformEl.onchange = () => {
+                    MSETTINGS.platform = document.querySelector('input[name="platform_radio"]:checked').value;
+                    $PI.setSettings(MSETTINGS);
+                };
+            }
+
+            const seasonEl = document.getElementById('season_radio');
+            if(seasonEl) {
+                const sSeason = document.getElementById(MSETTINGS.leaderboardVersion);
+                sSeason.checked = true;
+
+                seasonEl.onchange = () => {
+                    MSETTINGS.leaderboardVersion = document.querySelector('input[name="season_radio"]:checked').value;
+                    $PI.setSettings(MSETTINGS);
+                };
+            }
+      
+            // Finally show the UI
+            document.querySelector('.sdpi-wrapper').classList.remove('hidden');
+        });
+        document.querySelector('.sdpi-wrapper').classList.remove('hidden');
+    </script>
 </body>
 
 </html>
