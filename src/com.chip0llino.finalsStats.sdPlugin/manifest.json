@@ -4,7 +4,7 @@
 	"CodePath": "app.html",
 	"Description": "Plugin that shows your current rank in The Finals",
 	"Name": "The Finals Stats",
-	"Icon": "actions/template/assets/action",
+	"Icon": "actions/template/assets/finals",
 	"URL": "https://www.elgato.com/en/gaming/stream-deck",
 	"Version": "1.0.0",
 	"Software": {
@@ -21,15 +21,15 @@
 		}
 	],
 	"Category": "The Finals Plugin",
-	"CategoryIcon": "actions/template/assets/actionimage",
+	"CategoryIcon": "actions/template/assets/finals",
 	"Actions": [
 		{
-			"Icon": "actions/template/assets/actionimage",
+			"Icon": "actions/template/assets/finals",
 			"Name": "Current Rank",
 			"Controllers": ["Keypad"],
 			"States": [
 				{
-					"Image": "actions/template/assets/action"
+					"Image": "actions/template/assets/finals"
 				}
 			],
 			"Tooltip": "This action shows your current rank",

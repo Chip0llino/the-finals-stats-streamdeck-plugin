@@ -17,7 +17,7 @@
         <form id="property-inspector">
             <div class="sdpi-item">
                 <div data-localize class="sdpi-item-label" title="EmbarkID">Embark ID</div>
-                <input data-localize class="sdpi-item-value" id="embarkId" type="text" value="" placeholder="Your Embark ID" />
+                <input data-localize class="sdpi-item-value" id="embarkId" type="text" value="EmbarkID here" placeholder="Your Embark ID" />
             </div>
             <div type="radio" class="sdpi-item" id="platform_radio">
                 <div class="sdpi-item-label">Platform</div>
@@ -87,7 +87,7 @@
     <!-- Property Inspector Source -->
     <script>
         let MSETTINGS = {
-            embarkId: "",
+            embarkId: "EmbarkID here",
             platform: "steam",
             leaderboardVersion: "live"
         };        
@@ -99,6 +99,7 @@
             if(embarkIdEl) {
                 embarkIdEl.value = MSETTINGS.embarkId;
                 embarkIdEl.onchange = () => {
+                    console.log("new value for embarkId: " + embarkIdEl.value);
                     MSETTINGS.embarkId = embarkIdEl.value;
                     $PI.setSettings(MSETTINGS);
                 };
@@ -107,29 +108,37 @@
             const platformEl = document.getElementById('platform_radio');
             if(platformEl) {
                 const sPlatform = document.getElementById(MSETTINGS.platform);
-                sPlatform.checked = true;
+                if(sPlatform) {
+                    sPlatform.checked = true;
+                }                
 
-                platformEl.onchange = () => {
-                    MSETTINGS.platform = document.querySelector('input[name="platform_radio"]:checked').value;
-                    $PI.setSettings(MSETTINGS);
-                };
+                var platformRadios = document.getElementsByName("platform_radio");
+                platformRadios.forEach(radio => 
+                    radio.onchange = () => {
+                        console.log("new value for platform: " + radio.value);
+                        MSETTINGS.platform = radio.value;
+                        $PI.setSettings(MSETTINGS);                                        
+                    }
+                );
             }
 
             const seasonEl = document.getElementById('season_radio');
             if(seasonEl) {
                 const sSeason = document.getElementById(MSETTINGS.leaderboardVersion);
-                sSeason.checked = true;
+                if(sSeason){
+                    sSeason.checked = true;
+                }                
 
-                seasonEl.onchange = () => {
-                    MSETTINGS.leaderboardVersion = document.querySelector('input[name="season_radio"]:checked').value;
-                    $PI.setSettings(MSETTINGS);
-                };
+                var seasonRadios = document.getElementsByName("season_radio");
+                seasonRadios.forEach(radio => 
+                    radio.onchange = () => {
+                        console.log("new value for season: " + radio.value);
+                        MSETTINGS.leaderboardVersion = radio.value;
+                        $PI.setSettings(MSETTINGS);                                        
+                    }
+                );
             }
-      
-            // Finally show the UI
-            document.querySelector('.sdpi-wrapper').classList.remove('hidden');
         });
-        document.querySelector('.sdpi-wrapper').classList.remove('hidden');
     </script>
 </body>
 
