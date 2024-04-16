@@ -1,0 +1,40 @@
+{
+	"SDKVersion": 2,
+	"Author": "Chip0llino",
+	"CodePath": "app.html",
+	"Description": "Plugin that shows your current rank in The Finals",
+	"Name": "The Finals Stats",
+	"Icon": "actions/template/assets/action",
+	"URL": "https://www.elgato.com/en/gaming/stream-deck",
+	"Version": "1.0.0",
+	"Software": {
+		"MinimumVersion": "5.0"
+	},
+	"OS": [
+		{
+			"Platform": "mac",
+			"MinimumVersion": "10.11"
+		},
+		{
+			"Platform": "windows",
+			"MinimumVersion": "10"
+		}
+	],
+	"Category": "The Finals Plugin",
+	"CategoryIcon": "actions/template/assets/actionimage",
+	"Actions": [
+		{
+			"Icon": "actions/template/assets/actionimage",
+			"Name": "Current Rank",
+			"Controllers": ["Keypad"],
+			"States": [
+				{
+					"Image": "actions/template/assets/action"
+				}
+			],
+			"Tooltip": "This action shows your current rank",
+			"UUID": "com.chip0llino.finalsStats.rank",
+			"PropertyInspectorPath": "actions/template/property-inspector/inspector_stats.html"
+		}
+	]
+}
