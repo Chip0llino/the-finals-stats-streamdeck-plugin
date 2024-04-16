@@ -33,7 +33,7 @@
 				}
 			],
 			"Tooltip": "This action shows your current rank",
-			"UUID": "com.chip0llino.finalsStats.rank",
+			"UUID": "com.chip0llino.finalsStats.rank.action",
 			"PropertyInspectorPath": "actions/template/property-inspector/inspector_stats.html"
 		}
 	]

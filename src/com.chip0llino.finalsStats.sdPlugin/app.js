@@ -1,34 +1,36 @@
 /// <reference path="libs/js/action.js" />
 /// <reference path="libs/js/stream-deck.js" />
+/// <reference path="libs/js/utils.js" />
 
-$SD.onConnected(({ actionInfo, appInfo, connection, messageType, port, uuid }) => {
-	console.log('Stream Deck connected!');
-});
 
 // Action Cache
 const MACTIONS = {};
 
 // Action Events
-const playerRank = new Action('com.chip0llino.finalsStats.rank');
+const playerRankAction = new Action('com.chip0llino.finalsStats.rank.action');
 
-playerRank.onKeyUp(({ action, context, device, event, payload }) => {
-	//open leaderboard in browser
+playerRankAction.onKeyUp(({ context, payload }) => {
+    MACTIONS[context].openBoard(payload);
 });
 
-playerRank.onWillAppear(({ context,  payload }) => {
-	MACTIONS[context] = new FinalsLeaderboardAction(context, payload)
+playerRankAction.onWillAppear(({ context,  payload }) => {
+	MACTIONS[context] = new PlayerRankAction(context, payload)
 });
 
-playerRank.onWillDisappear(({context}) => {
+playerRankAction.onWillDisappear(({context}) => {
     MACTIONS[context].interval && clearInterval(MACTIONS[context].interval);
     delete MACTIONS[context];
 });
 
-playerRank.onDidReceiveSettings(({context, payload}) => {
+playerRankAction.onDidReceiveSettings(({context, payload}) => {
     MACTIONS[context].didReceiveSettings(payload?.settings);
 });
 
-class FinalsLeaderboardAction {
+$SD.onConnected(({ actionInfo, context }) => {
+	console.log('Stream Deck connected! \n actionInfo: ' + actionInfo);
+});
+
+class PlayerRankAction {
     constructor (context, payload) {
         this.context = context;
         this.payload = payload;
@@ -47,12 +49,14 @@ class FinalsLeaderboardAction {
     }
 
     init() {
+        console.log("Init call");
         this.interval = setInterval(() => {
             this.update();
-        }, this.settings.upInterval * 1000);
+        }, 30000);
     }
 
     didReceiveSettings(settings) {
+        console.log("Recieved settings call");
         if(!settings) return;
         let dirty = false;
         if(settings.hasOwnProperty('embarkId')) {
@@ -74,16 +78,44 @@ class FinalsLeaderboardAction {
         if(dirty) this.update();
     }
 
-    saveSettings(immediateUpdate = true) {
+    saveSettings(immediateUpdate = false) {
+        console.log("Save settings call");
         $SD.setSettings(this.context, this.settings);
         if(immediateUpdate) this.update();
     };
 
     update() {
+        console.log("Update call");
         /* Retrieve stats and set icon for current rank
-        
-        const icon = `data:image/svg+xml;base64,${btoa(svg)}`;
-        $SD.setImage(this.context, icon);
         */
+        const stats = this.retrieveStats;
+        console.log("Stats retrieved: \n" + stats);
+
+        $SD.setTitle(this.context, stats.data[0].league);
+        /* const icon = `data:image/svg+xml;base64,${btoa(svg)}`;
+        $SD.setImage(this.context, icon); */
+        
+    }
+
+    retrieveStats() {
+        console.log("Retrieve stats call");
+        let season = this.settings.leaderboardVersion;
+        let platform = this.settings.platform;
+        let embarkId = this.settings.embarkId;
+
+        let uri = `https://api.the-finals-leaderboard.com/v1/leaderboard/${season}/${platform}?name=${embarkId}`;
+
+        fetch(uri)
+            .then(response => { return response.json(); });
+    }
+
+    openBoard(payload) {
+        console.log("open board action");
+        let ctxSettings = payload.settings;
+        let platform = ctxSettings.platform === 'crossplay' ? "" : ctxSettings.platform;
+        let embarkId = ctxSettings.embarkId;
+
+        let uri = `https://the-finals-leaderboard.com/?name=${embarkId}&platform=${platform}`;
+        $SD.openUrl(uri);
     }
 }
