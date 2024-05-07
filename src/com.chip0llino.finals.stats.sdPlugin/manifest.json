@@ -6,7 +6,7 @@
 	"Name": "The Finals Stats",
 	"Icon": "actions/template/assets/finals",
 	"URL": "https://www.elgato.com/en/gaming/stream-deck",
-	"Version": "1.0.0",
+	"Version": "1.0.1",
 	"Software": {
 		"MinimumVersion": "5.0"
 	},
@@ -29,11 +29,22 @@
 			"Controllers": ["Keypad"],
 			"States": [
 				{
-					"Image": "actions/template/assets/finals"
+					"Image": "actions/template/assets/finals",
+					"TitleColor": "#15803D",
+					"TitleAlignment": "middle",
+          			"FontSize": "12",
+					"ShowTitle": true
+				},
+				{
+					"Image": "actions/template/assets/finals",
+					"TitleColor": "#DC2626",
+					"TitleAlignment": "middle",
+          			"FontSize": "12",
+					"ShowTitle": true
 				}
 			],
 			"Tooltip": "This action shows your current rank",
-			"UUID": "com.chip0llino.finalsStats.rank.action",
+			"UUID": "com.chip0llino.finals.stats.rank.action",
 			"PropertyInspectorPath": "actions/template/property-inspector/inspector_stats.html"
 		}
 	]

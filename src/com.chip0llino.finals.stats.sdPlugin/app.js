@@ -7,7 +7,7 @@
 const MACTIONS = {};
 
 // Action Events
-const playerRankAction = new Action('com.chip0llino.finalsStats.rank.action');
+const playerRankAction = new Action('com.chip0llino.finals.stats.rank.action');
 
 playerRankAction.onKeyUp(({ context, payload }) => {
     MACTIONS[context].openBoard(payload);
@@ -88,29 +88,47 @@ class PlayerRankAction {
         console.log("Update call");
         /* Retrieve stats and set icon for current rank
         */
-        const stats = this.retrieveStats;
-        console.log("Stats retrieved: \n" + stats);
+	   const uri = this.getUri()
 
-        $SD.setTitle(this.context, stats.data[0].league);
-        /* const icon = `data:image/svg+xml;base64,${btoa(svg)}`;
-        $SD.setImage(this.context, icon); */
+	   const request = new XMLHttpRequest();
+	   request.open("GET", uri, false);
+	   request.send(null);
+	   
+	   if (request.status === 200) {
+		 console.log(request.responseText);
+
+		 let stats = JSON.parse(request.response)
+
+		 if(stats.data.length == 1 && stats.data[0].hasOwnProperty("leagueNumber")) {
+			let change = stats.data[0].change
+            console.log(change)
+            $SD.setState(this.context, change > 0 ? 0 : 1)
+			$SD.setTitle(this.context, change.toString())
+			this.setImage(stats.data[0].leagueNumber)
+		  } else if(stats.data.length > 1) {
+            			
+		  }
+		   else {
+            $SD.setImage(this.context, 'actions/template/assets/NamaTama_04')
+			console.warn("Data for " + this.settings.embarkId + " was not found")
+		  }
+	   }
         
     }
 
-    retrieveStats() {
-        console.log("Retrieve stats call");
+    getUri() {
+        console.log("Get Uri call");
+
         let season = this.settings.leaderboardVersion;
         let platform = this.settings.platform;
         let embarkId = this.settings.embarkId;
 
-        let uri = `https://api.the-finals-leaderboard.com/v1/leaderboard/${season}/${platform}?name=${embarkId}`;
-
-        fetch(uri)
-            .then(response => { return response.json(); });
+        return `https://api.the-finals-leaderboard.com/v1/leaderboard/${season}/${platform}?name=${embarkId}`;
     }
 
     openBoard(payload) {
-        console.log("open board action");
+        console.log("Open board action");
+
         let ctxSettings = payload.settings;
         let platform = ctxSettings.platform === 'crossplay' ? "" : ctxSettings.platform;
         let embarkId = ctxSettings.embarkId;
@@ -118,4 +136,29 @@ class PlayerRankAction {
         let uri = `https://the-finals-leaderboard.com/?name=${embarkId}&platform=${platform}`;
         $SD.openUrl(uri);
     }
+
+	setImage(leagueNumber) {
+		switch(leagueNumber) {
+			case 15:
+				$SD.setImage(this.context, 'actions/template/assets/platinum-2')
+				break;
+			case 16:
+				$SD.setImage(this.context, 'actions/template/assets/platinum-1')
+				break;
+			case 17:
+				$SD.setImage(this.context, 'actions/template/assets/diamond-4')
+				break;
+			case 17:
+				$SD.setImage(this.context, 'actions/template/assets/diamond-3')
+				break;
+			case 17:
+				$SD.setImage(this.context, 'actions/template/assets/diamond-2')
+				break;
+			case 17:
+				$SD.setImage(this.context, 'actions/template/assets/diamond-1')
+				break;
+			default:
+				$SD.setImage(this.context, 'actions/template/assets/NamaTama_04')
+		}
+	}
 }

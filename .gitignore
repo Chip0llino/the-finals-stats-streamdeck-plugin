@@ -1,7 +1,7 @@
 .DS_Store
 .idea/**
 /src/DistributionTool
-com.chip0llino.finalsStats.streamDeckPlugin
+com.chip0llino.finals.stats.streamDeckPlugin
 .vscode/**
 package.json
 package-lock.json

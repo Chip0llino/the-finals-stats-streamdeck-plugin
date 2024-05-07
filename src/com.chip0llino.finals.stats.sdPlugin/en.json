@@ -2,7 +2,7 @@
   "Description": "Plugin that shows your current rank in The Finals", 
   "Name": "The Finals Stats", 
   "Category": "The Finals Plugin", 
-  "com.chip0llino.finalsStats.action": {
+  "com.chip0llino.finals.stats.action": {
     "Name": "Current Rank", 
     "Tooltip": "This action shows your current rank"
   }

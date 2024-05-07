@@ -8,7 +8,7 @@
           content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,minimal-ui,viewport-fit=cover" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-    <title>com.chip0llino.finalsStats Property Inspector</title>
+    <title>com.chip0llino.finals.stats Property Inspector</title>
     <link rel="stylesheet" href="../../../libs/css/sdpi.css" />
 </head>
 
@@ -87,7 +87,7 @@
     <!-- Property Inspector Source -->
     <script>
         let MSETTINGS = {
-            embarkId: "EmbarkID here",
+            embarkId: "Embark ID here",
             platform: "steam",
             leaderboardVersion: "live",
             upInterval: 5
@@ -98,7 +98,7 @@
 
             const embarkIdEl = document.getElementById('embarkId');
             if(embarkIdEl) {
-                embarkIdEl.value = MSETTINGS.embarkId;
+                embarkIdEl.value = MSETTINGS.embarkId === undefined ? "Embark ID here" : MSETTINGS.embarkId;
                 embarkIdEl.onchange = () => {
                     console.log("new value for embarkId: " + embarkIdEl.value);
                     MSETTINGS.embarkId = embarkIdEl.value;
